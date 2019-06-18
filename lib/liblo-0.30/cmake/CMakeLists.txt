@@ -350,11 +350,11 @@ endif()
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/../lo/lo.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/lo/lo.h)
+    ${CMAKE_CURRENT_BINARY_DIR}/../../../../build/lo.h)
 test_big_endian(LO_BIGENDIAN)
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/../lo/lo_endian.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/lo/lo_endian.h)
+    ${CMAKE_CURRENT_BINARY_DIR}/../../../../build/lo_endian.h)
 configure_file(
     ${PROJECT}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT}Config.cmake)
