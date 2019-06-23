@@ -8,13 +8,17 @@
 
 namespace osceleton {
 
-    OSCSender::OSCSender(const char *address, const char *port) : lo_address_{lo_address_new(address, port)} {
-
+    OSCSender::OSCSender(const char *address, const char *port) {
+	lo_address_= lo_address_new(address, port);
     }
+
+	OSCSender::~OSCSender(){
+	lo_address_free(lo_address_);
+}
 
     void OSCSender::sendSkeleton(const std::vector<tdv::nuitrack::Skeleton> &skeletons) {
         for (const auto &skeleton : skeletons) {
-            processSkeleton(skeleton);
+		processSkeleton(skeleton);
         }
     }
 
@@ -22,6 +26,8 @@ namespace osceleton {
         lo_bundle skeleton_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
         for (const auto &joint : skeleton.joints) {
             if (joint.confidence >= 0.5) {
+ printf("I");
+
                 lo_message joint_message = lo_message_new();
                 lo_message_add_int32(joint_message, skeleton.id);
                 lo_message_add_string(joint_message, jointTypeName.at(joint.type).c_str());
@@ -51,6 +57,7 @@ namespace osceleton {
 
             }
         }
+printf("\n");
         lo_send_bundle(lo_address_, skeleton_bundle);
     }
 

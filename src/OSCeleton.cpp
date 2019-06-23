@@ -1,3 +1,4 @@
+
 //
 // file OSCeleton.cpp
 // Created by Bartek
@@ -72,16 +73,18 @@ int main(int argc, char **argv) {
                 std::cerr << "LicenseNotAcquired exception (ExceptionType: " << e.type() << ")" << std::endl;
                 return_code = EXIT_FAILURE;
                 break;
-            }
-            osc_sender.sendSkeleton(skeleton_tracker.getSkeletons());
+	    }
+printf("d\n");
+	    osc_sender.sendSkeleton(skeleton_tracker.getSkeletons());
         }
 
         skeleton_tracker.release_nuitrack();
-    }
+   }
     catch (const tdv::nuitrack::Exception &e) {
         std::cerr << "Nuitrack release failed (ExceptionType: " << e.type() << ")" << std::endl;
         return_code = EXIT_FAILURE;
     }
+
     return return_code;
 }
 
