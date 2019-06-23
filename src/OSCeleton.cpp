@@ -65,6 +65,13 @@ int main(int argc, char **argv) {
         osceleton::OSCSender osc_sender(ADDRESS, PORT);
         osceleton::SkeletonTracker skeleton_tracker{};
 
+        auto on_new = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
+                                    int user_id) { osc_sender.sendIntMessage("/new_user", user_id); };
+        auto on_lost = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
+                                     int user_id) { osc_sender.sendIntMessage("/lost_user", user_id); };
+        
+        skeleton_tracker.registerOnNewUserCallback(on_new);
+        skeleton_tracker.registerOnLostUserCallback(on_lost);
         while (true) {
             try {
                 skeleton_tracker.update();
@@ -73,13 +80,13 @@ int main(int argc, char **argv) {
                 std::cerr << "LicenseNotAcquired exception (ExceptionType: " << e.type() << ")" << std::endl;
                 return_code = EXIT_FAILURE;
                 break;
-	    }
-printf("d\n");
-	    osc_sender.sendSkeleton(skeleton_tracker.getSkeletons());
+            }
+            printf("d\n");
+            osc_sender.sendSkeleton(skeleton_tracker.getSkeletons());
         }
 
         skeleton_tracker.release_nuitrack();
-   }
+    }
     catch (const tdv::nuitrack::Exception &e) {
         std::cerr << "Nuitrack release failed (ExceptionType: " << e.type() << ")" << std::endl;
         return_code = EXIT_FAILURE;

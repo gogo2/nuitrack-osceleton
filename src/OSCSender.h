@@ -15,9 +15,11 @@ namespace osceleton {
     public:
         explicit OSCSender(const char *address = "127.0.0.1", const char *port = "7110");
 
-	~OSCSender();
+        ~OSCSender();
 
         void sendSkeleton(const std::vector<tdv::nuitrack::Skeleton> &skeletons);
+
+        void sendIntMessage(const char * address, const int content);
 
     private:
 

@@ -10,7 +10,7 @@ namespace osceleton {
 
     SkeletonTracker::SkeletonTracker() {
         tdv::nuitrack::Nuitrack::init();
-	skeleton_tracker_ = tdv::nuitrack::SkeletonTracker::create();
+        skeleton_tracker_ = tdv::nuitrack::SkeletonTracker::create();
         tdv::nuitrack::Nuitrack::run();
     }
 
@@ -30,6 +30,14 @@ namespace osceleton {
 
     void SkeletonTracker::release_nuitrack() {
         tdv::nuitrack::Nuitrack::release();
+    }
+
+    void SkeletonTracker::registerOnNewUserCallback(tdv::nuitrack::SkeletonTracker::OnNewUser callback) {
+        skeleton_tracker_->connectOnNewUser(callback);
+    }
+
+    void SkeletonTracker::registerOnLostUserCallback(tdv::nuitrack::SkeletonTracker::OnLostUser callback) {
+        skeleton_tracker_->connectOnLostUser(callback);
     }
 
 }
