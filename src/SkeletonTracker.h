@@ -18,9 +18,9 @@ namespace osceleton {
 
         std::vector<tdv::nuitrack::Skeleton> getSkeletons() const;
 
-        void registerOnNewUserCallback(tdv::nuitrack::SkeletonTracker::OnNewUser callback);
+        void registerOnNewUserCallback(const tdv::nuitrack::SkeletonTracker::OnNewUser &callback);
 
-        void registerOnLostUserCallback(tdv::nuitrack::SkeletonTracker::OnLostUser callback);
+        void registerOnLostUserCallback(const tdv::nuitrack::SkeletonTracker::OnLostUser &callback);
 
         void update();
 

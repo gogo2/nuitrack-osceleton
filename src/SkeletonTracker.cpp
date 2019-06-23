@@ -19,8 +19,8 @@ namespace osceleton {
     }
 
     void SkeletonTracker::update() {
-//        tdv::nuitrack::Nuitrack::update();
-        tdv::nuitrack::Nuitrack::waitUpdate(skeleton_tracker_);
+        tdv::nuitrack::Nuitrack::update();
+//        tdv::nuitrack::Nuitrack::waitUpdate(skeleton_tracker_);
         skeleton_data_ = skeleton_tracker_->getSkeletons();
     }
 
@@ -32,14 +32,11 @@ namespace osceleton {
         tdv::nuitrack::Nuitrack::release();
     }
 
-    void SkeletonTracker::registerOnNewUserCallback(tdv::nuitrack::SkeletonTracker::OnNewUser callback) {
-        skeleton_tracker_->connectOnNewUser([](tdv::nuitrack::SkeletonTracker::Ptr tracker,
-                                               int user_id) {
-            printf("dsadasdasdasda\n");
-        });
+    void SkeletonTracker::registerOnNewUserCallback(const tdv::nuitrack::SkeletonTracker::OnNewUser& callback) {
+        skeleton_tracker_->connectOnNewUser(callback);
     }
 
-    void SkeletonTracker::registerOnLostUserCallback(tdv::nuitrack::SkeletonTracker::OnLostUser callback) {
+    void SkeletonTracker::registerOnLostUserCallback(const tdv::nuitrack::SkeletonTracker::OnLostUser &callback) {
         skeleton_tracker_->connectOnLostUser(callback);
     }
 
