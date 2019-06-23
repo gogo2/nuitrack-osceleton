@@ -66,9 +66,9 @@ int main(int argc, char **argv) {
         osceleton::SkeletonTracker skeleton_tracker{};
 
         auto on_new = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
-                                    int user_id) { osc_sender.sendIntMessage("/new_user", user_id); };
+                                    int user_id) { osc_sender.sendIntMessage("/new_user", user_id);printf("dddddd");  };
         auto on_lost = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
-                                     int user_id) { osc_sender.sendIntMessage("/lost_user", user_id); };
+                                     int user_id) { osc_sender.sendIntMessage("/lost_user", user_id);printf("dddddd"); };
         
         skeleton_tracker.registerOnNewUserCallback(on_new);
         skeleton_tracker.registerOnLostUserCallback(on_lost);
