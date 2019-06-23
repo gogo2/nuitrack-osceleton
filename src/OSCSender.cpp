@@ -12,91 +12,46 @@ namespace osceleton {
 
     }
 
-    void OSCSender::sendSkeleton(const tdv::nuitrack::SkeletonData::Ptr &skeleton_data) {
-        XnUserID aUsers[15];
-        XnUInt16 nUsers = 15;
-        userGenerator.GetUsers(aUsers, nUsers);
-        for (int i = 0; i < nUsers; ++i) {
-            if (userGenerator.GetSkeletonCap().IsTracking(aUsers[i])) {
-                lo_bundle bundle = lo_bundle_new(LO_TT_IMMEDIATE);
-
-                if (jointPos(aUsers[i], XN_SKEL_HEAD) == 0) {
-                    genOscMsg(&bundle, "head");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_NECK) == 0) {
-                    genOscMsg(&bundle, "neck");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_COLLAR) == 0) {
-                    genOscMsg(&bundle, "l_collar");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_SHOULDER) == 0) {
-                    genOscMsg(&bundle, "l_shoulder");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_ELBOW) == 0) {
-                    genOscMsg(&bundle, "l_elbow");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_WRIST) == 0) {
-                    genOscMsg(&bundle, "l_wrist");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_HAND) == 0) {
-                    genOscMsg(&bundle, "l_hand");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_FINGERTIP) == 0) {
-                    genOscMsg(&bundle, "l_fingertip");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_COLLAR) == 0) {
-                    genOscMsg(&bundle, "r_collar");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_SHOULDER) == 0) {
-                    genOscMsg(&bundle, "r_shoulder");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_ELBOW) == 0) {
-                    genOscMsg(&bundle, "r_elbow");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_WRIST) == 0) {
-                    genOscMsg(&bundle, "r_wrist");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_HAND) == 0) {
-                    genOscMsg(&bundle, "r_hand");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_FINGERTIP) == 0) {
-                    genOscMsg(&bundle, "r_fingertip");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_TORSO) == 0) {
-                    genOscMsg(&bundle, "torso");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_WAIST) == 0) {
-                    genOscMsg(&bundle, "waist");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_HIP) == 0) {
-                    genOscMsg(&bundle, "l_hip");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_KNEE) == 0) {
-                    genOscMsg(&bundle, "l_knee");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_ANKLE) == 0) {
-                    genOscMsg(&bundle, "l_ankle");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_LEFT_FOOT) == 0) {
-                    genOscMsg(&bundle, "l_foot");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_HIP) == 0) {
-                    genOscMsg(&bundle, "r_hip");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_KNEE) == 0) {
-                    genOscMsg(&bundle, "r_knee");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_ANKLE) == 0) {
-                    genOscMsg(&bundle, "r_ankle");
-                }
-                if (jointPos(aUsers[i], XN_SKEL_RIGHT_FOOT) == 0) {
-                    genOscMsg(&bundle, "r_foot");
-                }
-
-                lo_send_bundle(addr, bundle);
-            } else {
-                sendUserPosMsg(aUsers[i]);
-            }
+    void OSCSender::sendSkeleton(const std::vector<tdv::nuitrack::Skeleton> &skeletons) {
+        for (const auto &skeleton : skeletons) {
+            processSkeleton(skeleton);
         }
     }
+
+    void OSCSender::processSkeleton(const tdv::nuitrack::Skeleton &skeleton) {
+        lo_bundle skeleton_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
+        for (const auto &joint : skeleton.joints) {
+            if (joint.confidence >= 0.5) {
+                lo_message joint_message = lo_message_new();
+                lo_message_add_int32(joint_message, skeleton.id);
+                lo_message_add_string(joint_message, jointTypeName.at(joint.type).c_str());
+
+                lo_message_add_float(joint_message, joint.proj.x);
+                lo_message_add_float(joint_message, joint.proj.y);
+                lo_message_add_float(joint_message, joint.proj.z);
+
+                lo_bundle_add_message(skeleton_bundle, "/joint", joint_message);
+
+                if(send_orient_) {
+                    lo_message orient_message = lo_message_new();
+                    // x data is in first column
+                    lo_message_add_float(orient_message, joint.orient.matrix[0]);
+                    lo_message_add_float(orient_message, joint.orient.matrix[0 + 3]);
+                    lo_message_add_float(orient_message, joint.orient.matrix[0 + 6]);
+                    // y data is in 2nd column
+                    lo_message_add_float(orient_message, joint.orient.matrix[1]);
+                    lo_message_add_float(orient_message, joint.orient.matrix[1 + 3]);
+                    lo_message_add_float(orient_message, joint.orient.matrix[1 + 6]);
+                    // z data is in 3rd column
+                    lo_message_add_float(orient_message, joint.orient.matrix[2]);
+                    lo_message_add_float(orient_message, joint.orient.matrix[2 + 3]);
+                    lo_message_add_float(orient_message, joint.orient.matrix[2 + 6]);
+                    lo_bundle_add_message(skeleton_bundle, "/orient", orient_message);
+                }
+
+            }
+        }
+        lo_send_bundle(lo_address_, skeleton_bundle);
+    }
+
 }

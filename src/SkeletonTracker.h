@@ -16,7 +16,7 @@ namespace osceleton {
 
         ~SkeletonTracker();
 
-        const tdv::nuitrack::SkeletonData::Ptr & skeleton_data() const;
+        std::vector<tdv::nuitrack::Skeleton> getSkeletons() const;
 
         void update();
 

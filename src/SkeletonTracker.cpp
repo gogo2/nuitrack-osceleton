@@ -10,24 +10,21 @@ namespace osceleton {
 
     SkeletonTracker::SkeletonTracker() {
         tdv::nuitrack::Nuitrack::init();
-
         tdv::nuitrack::Nuitrack::run();
     }
 
     SkeletonTracker::~SkeletonTracker() {
-//        release_nuitrack();
+        release_nuitrack();
     }
 
     void SkeletonTracker::update() {
         tdv::nuitrack::Nuitrack::update();
-
         tdv::nuitrack::Nuitrack::waitUpdate(skeleton_tracker_);
-
         skeleton_data_ = skeleton_tracker_->getSkeletons();
     }
 
-    const tdv::nuitrack::SkeletonData::Ptr &SkeletonTracker::skeleton_data() const {
-        return skeleton_data_;
+    std::vector<tdv::nuitrack::Skeleton> SkeletonTracker::getSkeletons() const {
+        return skeleton_data_->getSkeletons();
     }
 
     void SkeletonTracker::release_nuitrack() {
