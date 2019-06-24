@@ -20,11 +20,11 @@ int usage(char *name);
 int main(int argc, char **argv) {
     int return_code = EXIT_SUCCESS;
     std::cout << "Starting OSCeleton..." << std::endl;
-    unsigned arg = 1;
+    unsigned curr_arg = 1;
     bool require_argument = false;
 
-    while (arg < argc and argv[arg][0] == '-') {
-        switch (argv[arg][1]) {
+    while (curr_arg < argc and argv[curr_arg][0] == '-') {
+        switch (argv[curr_arg][1]) {
             case 'h':
                 usage(argv[0]);
                 break;
@@ -33,24 +33,25 @@ int main(int argc, char **argv) {
                 require_argument = true;
                 break;
             default:
+                require_argument = false;
                 break;
         }
 
-        if (require_argument and arg + 1 >= argc) {
-            std::cout << "The option " << argv[arg] << " require an argument." << std::endl;
+        if (require_argument and curr_arg + 1 >= argc) {
+            std::cout << "The option " << argv[curr_arg] << " require an argument." << std::endl;
             usage(argv[0]);
         }
 
-        switch (argv[arg][1]) {
+        switch (argv[curr_arg][1]) {
             case 'h':
                 usage(argv[0]);
                 break;
             case 'a':
-                ADDRESS = argv[arg + 1];
+                ADDRESS = argv[curr_arg + 1];
                 break;
             case 'p':
-                if (strtol(argv[arg + 1], nullptr, 10)) {
-                    PORT = argv[arg + 1];
+                if (strtol(argv[curr_arg + 1], nullptr, 10)) {
+                    PORT = argv[curr_arg + 1];
                 } else {
                     std::cout << "Bad port number given." << std::endl;
                     exit(-1);
@@ -59,10 +60,13 @@ int main(int argc, char **argv) {
             default:
                 break;
         }
+
+        curr_arg = require_argument ? curr_arg + 2 : curr_arg + 1;
     }
 
     try {
         osceleton::OSCSender osc_sender(ADDRESS, PORT);
+        printf("osc adress: %s::%s", ADDRESS, PORT);
         osceleton::SkeletonTracker skeleton_tracker{};
 
         auto on_new = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
