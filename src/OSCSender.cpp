@@ -8,62 +8,54 @@
 
 namespace osceleton {
 
-    OSCSender::OSCSender(const char *address, const char *port) {
-        lo_address_ = lo_address_new(address, port);
+    OSCSender::OSCSender(const char *address, const char *port) : lo_address_{address, port} {
     }
 
-    OSCSender::~OSCSender() {
-        lo_address_free(lo_address_);
-    }
-
-    void OSCSender::sendSkeleton(const std::vector<tdv::nuitrack::Skeleton> &skeletons) {
+    void OSCSender::sendSkeletons(const std::vector<tdv::nuitrack::Skeleton> &skeletons) {
         for (const auto &skeleton : skeletons) {
             processSkeleton(skeleton);
         }
     }
 
     void OSCSender::processSkeleton(const tdv::nuitrack::Skeleton &skeleton) {
-        lo_bundle skeleton_bundle = lo_bundle_new(LO_TT_IMMEDIATE);
+        lo::Bundle skeleton_bundle{};
         for (const auto &joint : skeleton.joints) {
             if (joint.confidence >= 0.5) {
-//                printf("I");
+                lo::Message joint_message{};
+                joint_message.add_int32(skeleton.id);
+                joint_message.add_string(jointTypeName.at(joint.type).c_str());
 
-                lo_message joint_message = lo_message_new();
-                lo_message_add_int32(joint_message, skeleton.id);
-                lo_message_add_string(joint_message, jointTypeName.at(joint.type).c_str());
+                joint_message.add_float(joint.proj.x);
+                joint_message.add_float(joint.proj.y);
+                joint_message.add_float(joint.proj.z);
 
-                lo_message_add_float(joint_message, joint.proj.x);
-                lo_message_add_float(joint_message, joint.proj.y);
-                lo_message_add_float(joint_message, joint.proj.z);
-
-                lo_bundle_add_message(skeleton_bundle, "/joint", joint_message);
+                skeleton_bundle.add("/joint", joint_message);
 
                 if (send_orient_) {
-                    lo_message orient_message = lo_message_new();
-                    // x data is in first column
-                    lo_message_add_float(orient_message, joint.orient.matrix[0]);
-                    lo_message_add_float(orient_message, joint.orient.matrix[0 + 3]);
-                    lo_message_add_float(orient_message, joint.orient.matrix[0 + 6]);
-                    // y data is in 2nd column
-                    lo_message_add_float(orient_message, joint.orient.matrix[1]);
-                    lo_message_add_float(orient_message, joint.orient.matrix[1 + 3]);
-                    lo_message_add_float(orient_message, joint.orient.matrix[1 + 6]);
-                    // z data is in 3rd column
-                    lo_message_add_float(orient_message, joint.orient.matrix[2]);
-                    lo_message_add_float(orient_message, joint.orient.matrix[2 + 3]);
-                    lo_message_add_float(orient_message, joint.orient.matrix[2 + 6]);
-                    lo_bundle_add_message(skeleton_bundle, "/orient", orient_message);
-                }
+                    lo::Message orient_message{};
 
+                    orient_message.add_float(joint.orient.matrix[0]);
+                    orient_message.add_float(joint.orient.matrix[0 + 3]);
+                    orient_message.add_float(joint.orient.matrix[0 + 6]);
+
+                    orient_message.add_float(joint.orient.matrix[1]);
+                    orient_message.add_float(joint.orient.matrix[1 + 3]);
+                    orient_message.add_float(joint.orient.matrix[1 + 6]);
+
+                    orient_message.add_float(joint.orient.matrix[2]);
+                    orient_message.add_float(joint.orient.matrix[2 + 3]);
+                    orient_message.add_float(joint.orient.matrix[2 + 6]);
+
+                    skeleton_bundle.add("/orient", orient_message);
+                }
             }
         }
-        printf("\n");
-        lo_send_bundle(lo_address_, skeleton_bundle);
+        lo_address_.send(skeleton_bundle);
     }
 
     void OSCSender::sendIntMessage(const char *address, const int content) {
         printf("%s: %d", address, content);
-        lo_send(lo_address_, address, "i", content);
+        lo_address_.send(address, "i", content);
     }
 
 }

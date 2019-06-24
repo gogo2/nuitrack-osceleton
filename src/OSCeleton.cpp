@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
                 break;
             }
             printf("d\n");
-            osc_sender.sendSkeleton(skeleton_tracker.getSkeletons());
+            osc_sender.sendSkeletons(skeleton_tracker.getSkeletons());
         }
 
         skeleton_tracker.release_nuitrack();
