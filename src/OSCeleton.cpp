@@ -71,11 +71,13 @@ int main(int argc, char **argv) {
 
         skeleton_tracker.registerOnNewUserCallback(
                 [&osc_sender](int user_id) {
+                    printf("NEW USER: %d\n", user_id);
                     osc_sender.sendIntMessage("/new_user", user_id);
                 });
 
         skeleton_tracker.registerOnLostUserCallback(
                 [&osc_sender](int user_id) {
+                    printf("LOST USER: %d\n", user_id);
                     osc_sender.sendIntMessage("/lost_user", user_id);
                 });
 
