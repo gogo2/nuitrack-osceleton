@@ -1,13 +1,13 @@
 import argparse
+
 from pythonosc import dispatcher
 from pythonosc import osc_server
 
 
 def handler(address, *args):
-    print("MESSAGE BEGIN: ",address)
+    print("MESSAGE ", address)
     for arg in args:
         print('\t', arg)
-    print("MESSAGE END")
 
 
 if __name__ == "__main__":
@@ -19,8 +19,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dispatcher = dispatcher.Dispatcher()
-    # dispatcher.map("*", print)
+
     dispatcher.map("*", handler)
+    # dispatcher.map("/new_user", handler)
+    # dispatcher.map("/lost_user", handler)
 
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
