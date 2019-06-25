@@ -66,22 +66,21 @@ int main(int argc, char **argv) {
 
     try {
         osceleton::OSCSender osc_sender(ADDRESS, PORT);
-        printf("osc adress: %s::%s", ADDRESS, PORT);
+        printf("OSC address: %s::%s", ADDRESS, PORT);
         osceleton::SkeletonTracker skeleton_tracker{};
 
-        auto on_new = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
-                                    int user_id) {
-            osc_sender.sendIntMessage("/new_user", user_id);
-            printf("dddddd");
-        };
-        auto on_lost = [&osc_sender](tdv::nuitrack::SkeletonTracker::Ptr tracker,
-                                     int user_id) {
-            osc_sender.sendIntMessage("/lost_user", user_id);
-            printf("dddddd");
-        };
+        skeleton_tracker.registerOnNewUserCallback(
+                [&osc_sender](int user_id) {
+                    printf("NEW USER: %d\n", user_id);
+                    osc_sender.sendIntMessage("/new_user", user_id);
+                });
 
-        skeleton_tracker.registerOnNewUserCallback(on_new);
-        skeleton_tracker.registerOnLostUserCallback(on_lost);
+        skeleton_tracker.registerOnLostUserCallback(
+                [&osc_sender](int user_id) {
+                    printf("LOST USER: %d\n", user_id);
+                    osc_sender.sendIntMessage("/lost_user", user_id);
+                });
+
         while (true) {
             try {
                 skeleton_tracker.update();
@@ -91,7 +90,6 @@ int main(int argc, char **argv) {
                 return_code = EXIT_FAILURE;
                 break;
             }
-            printf("d\n");
             osc_sender.sendSkeletons(skeleton_tracker.getSkeletons());
         }
 
