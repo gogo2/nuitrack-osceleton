@@ -1,7 +1,7 @@
 
 //
 // file OSCeleton.cpp
-// Created by Bartek
+// Created by Bartosz Sobol
 //
 
 #include <cstdio>
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
         options.add_options()
                 ("a, address", "OSC server address", cxxopts::value<std::string>()->default_value("127.0.0.1"))
                 ("p, port", "OSC server port", cxxopts::value<std::string>()->default_value("7110"))
-                ("h,help", "OSCeleton help");
+                ("h, help", "OSCeleton help");
 
         auto parsed_options = options.parse(argc, argv);
 
