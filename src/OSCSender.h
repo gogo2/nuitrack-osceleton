@@ -14,7 +14,7 @@ namespace osceleton {
 
     class OSCSender {
     public:
-        explicit OSCSender(const char *address = "127.0.0.1", const char *port = "7110");
+        explicit OSCSender(const std::string &address = "127.0.0.1", const std::string &port = "7110");
 
         ~OSCSender() = default;
 

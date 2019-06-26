@@ -7,9 +7,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 #set(CMAKE_VERBOSE_MAKEFILE on)
 
 set(BUILD_DIR ${PROJECT_SOURCE_DIR}/build)
+set(LIB_DIR ${PROJECT_SOURCE_DIR}/lib)
 set(LO_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/lib/liblo-0.30)
 link_directories(${BUILD_DIR})
-include_directories(${BUILD_DIR})
+include_directories(${LIB_DIR})
 include_directories(${LO_INCLUDE_DIR})
 
 

@@ -8,7 +8,8 @@
 
 namespace osceleton {
 
-    OSCSender::OSCSender(const char *address, const char *port) : lo_address_{address, port} {}
+    OSCSender::OSCSender(const std::string &address, const std::string &port) : lo_address_{address.c_str(),
+                                                                                            port.c_str()} {}
 
     void OSCSender::sendSkeletons(const std::vector<tdv::nuitrack::Skeleton> &skeletons) {
         for (const auto &skeleton : skeletons) {
