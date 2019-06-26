@@ -19,10 +19,12 @@ int main(int argc, char **argv) {
 
         cxxopts::Options options("OSCeleton", "nuitrack-osceleton");
 
-        options.add_options()
-                ("a, address", "OSC server address", cxxopts::value<std::string>()->default_value("127.0.0.1"))
-                ("p, port", "OSC server port", cxxopts::value<std::string>()->default_value("7110"))
-                ("h, help", "OSCeleton help");
+        options.add_options("", {
+                {"a, address", "OSC server address", cxxopts::value<std::string>()->default_value("127.0.0.1")},
+                {"p, port",    "OSC server port",    cxxopts::value<std::string>()->default_value("7110")},
+                {"r, reverse", "Mirror skeleton image horizontally"},
+                {"h, help",    "OSCeleton help"}
+        });
 
         auto parsed_options = options.parse(argc, argv);
 
@@ -51,7 +53,6 @@ int main(int argc, char **argv) {
                     printf("LOST USER: %d\n", user_id);
                     osc_sender.sendIntMessage("/lost_user", user_id);
                 });
-
         while (true) {
             try {
                 skeleton_tracker.update();
