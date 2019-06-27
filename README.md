@@ -18,10 +18,12 @@ as any CMake project
 
 
 ## Usage
+ ```
   OSCeleton [OPTION...]
   -a, --address arg  OSC server address (default: 127.0.0.1)
   -p, --port arg     OSC server port (default: 7110)
   -h, --help         Help
+  ```
 
 ### Message format
 * Joint data: `/joint user_id joint_name x y z`
