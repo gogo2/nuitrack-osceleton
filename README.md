@@ -1,6 +1,6 @@
 # nuitrack-osceleton
 
-Nuitrack-osceleton is a program that takes skeleton data from any depth sensor supportet by [Nuitrack](https://nuitrack.com/)
+Nuitrack-osceleton is a program that takes skeleton data from any depth sensor supported by [Nuitrack](https://nuitrack.com/)
 and sends joints coordinates via OSC.
 
 It is a modern rewrite [OSCeleton](https://github.com/Sensebloom/OSCeleton) for Nuitrack middleware.  
