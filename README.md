@@ -9,7 +9,7 @@ For now it supports only basic, main features of original OSCeleton.
 
 ## Requirements
 * Building process of nuitrack-osceleton is managed by [CMake](https://cmake.org/)
-* Nuitrack-osceleon depends Nuitrack and NuitrackSDK which can be downloaded for free form [here](https://download.3divi.com/Nuitrack/)
+* Nuitrack-osceleon depends Nuitrack and NuitrackSDK which can be downloaded from [here](https://download.3divi.com/Nuitrack/)
 * For OSC we use liblo which is included in repository
 * Modern C++ compiler (project is set to C++14, but probably C++11 will also be sufficient)
 
