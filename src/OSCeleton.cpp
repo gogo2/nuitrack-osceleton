@@ -22,8 +22,7 @@ int main(int argc, char **argv) {
         options.add_options("", {
                 {"a, address", "OSC server address", cxxopts::value<std::string>()->default_value("127.0.0.1")},
                 {"p, port",    "OSC server port",    cxxopts::value<std::string>()->default_value("7110")},
-                {"r, reverse", "Mirror skeleton image horizontally"},
-                {"h, help",    "OSCeleton help"}
+                {"h, help",    "Help"}
         });
 
         auto parsed_options = options.parse(argc, argv);
