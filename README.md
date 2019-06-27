@@ -3,8 +3,8 @@
 Nuitrack-osceleton is a program that takes skeleton data from any depth sensor supportet by [Nuitrack](https://nuitrack.com/)
 and sends joints coordinates via OSC.
 
-It is a modern rewrite [OSCeleton](https://github.com/Sensebloom/OSCeleton) for Nuitrack middleware.
-Original OSCeleton becomes more and more obsolete as OpenNI 1.x and NiTE are no longer available for public use.
+It is a modern rewrite [OSCeleton](https://github.com/Sensebloom/OSCeleton) for Nuitrack middleware.  
+Original OSCeleton becomes more and more obsolete as OpenNI 1.x and NiTE are no longer available for public use.  
 For now it supports only basic, main features of original OSCeleton.
 
 ## Requirements
