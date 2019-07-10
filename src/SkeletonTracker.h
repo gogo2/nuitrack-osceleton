@@ -14,6 +14,8 @@ namespace osceleton {
     public:
         SkeletonTracker();
 
+        explicit SkeletonTracker(bool mirror);
+
         ~SkeletonTracker();
 
         std::vector<tdv::nuitrack::Skeleton> getSkeletons() const;
@@ -24,9 +26,10 @@ namespace osceleton {
 
         void update();
 
-        void release_nuitrack();
+        static void release_nuitrack();
 
     private:
+        tdv::nuitrack::DepthSensor::Ptr depth_sensor_;
         tdv::nuitrack::SkeletonTracker::Ptr skeleton_tracker_;
         tdv::nuitrack::UserTracker::Ptr user_tracker_;
         tdv::nuitrack::SkeletonData::Ptr skeleton_data_;

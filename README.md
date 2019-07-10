@@ -22,6 +22,7 @@ as any CMake project
   OSCeleton [OPTION...]
   -a, --address arg  OSC server address (default: 127.0.0.1)
   -p, --port arg     OSC server port (default: 7110)
+  -r, --reverse      Disable mirror mode
   -h, --help         Help
   ```
 

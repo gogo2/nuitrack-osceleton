@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
         options.add_options("", {
                 {"a, address", "OSC server address", cxxopts::value<std::string>()->default_value("127.0.0.1")},
                 {"p, port",    "OSC server port",    cxxopts::value<std::string>()->default_value("7110")},
+                {"r, reverse", "Disable mirror mode"},
                 {"h, help",    "Help"}
         });
 
@@ -34,13 +35,14 @@ int main(int argc, char **argv) {
 
         std::string address = parsed_options["address"].as<std::string>();
         std::string port = parsed_options["port"].as<std::string>();
+        bool mirror = !parsed_options["reverse"].as<bool>();
 
         std::cout << "Starting OSCeleton..." << std::endl;
 
         osceleton::OSCSender osc_sender(address, port);
         std::cout << "OSC address: " << address << "::" << port << std::endl;
 
-        osceleton::SkeletonTracker skeleton_tracker{};
+        osceleton::SkeletonTracker skeleton_tracker(mirror);
 
         skeleton_tracker.registerOnNewUserCallback(
                 [&osc_sender](int user_id) {
