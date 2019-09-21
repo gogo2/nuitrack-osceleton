@@ -54,11 +54,9 @@ int main(int argc, char **argv) {
                 });
         skeleton_tracker.registerOnLostUserCallback(
                 [&osc_sender, &users](int user_id) {
-                    auto user_find = users.find(user_id);
-                    if (user_find != users.end()) {
+                    if (users.erase(user_id)) {
                         printf("LOST USER: %d\n", user_id);
                         osc_sender.sendIntMessage("/lost_user", user_id);
-                        users.erase(user_find);
                     }
                 });
         while (true) {
