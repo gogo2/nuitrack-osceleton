@@ -9,6 +9,7 @@
 #include <iostream>
 #include <functional>
 #include <cxxopts.hpp>
+#include <set>
 
 #include "SkeletonTracker.h"
 #include "OSCSender.h"
@@ -43,15 +44,22 @@ int main(int argc, char **argv) {
 
         osceleton::SkeletonTracker skeleton_tracker{};
 
+        std::set<int> users{};
+
         skeleton_tracker.registerOnNewUserCallback(
-                [&osc_sender](int user_id) {
+                [&osc_sender, &users](int user_id) {
                     printf("NEW USER: %d\n", user_id);
+                    users.emplace(user_id);
                     osc_sender.sendIntMessage("/new_user", user_id);
                 });
         skeleton_tracker.registerOnLostUserCallback(
-                [&osc_sender](int user_id) {
-                    printf("LOST USER: %d\n", user_id);
-                    osc_sender.sendIntMessage("/lost_user", user_id);
+                [&osc_sender, &users](int user_id) {
+                    auto user_find = users.find(user_id);
+                    if (user_find != users.end()) {
+                        printf("LOST USER: %d\n", user_id);
+                        osc_sender.sendIntMessage("/lost_user", user_id);
+                        users.erase(user_find);
+                    }
                 });
         while (true) {
             try {
