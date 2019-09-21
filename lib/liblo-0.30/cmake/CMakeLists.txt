@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 
-option(WITH_TOOLS "Enable building tools." ON)
-option(WITH_TESTS "Enable building tests." ON)
-option(WITH_EXAMPLES "Enable building examples." ON)
-option(WITH_CPP_TESTS "Enable building C++ wrapper tests." ON)
+option(WITH_TOOLS "Enable building tools." OFF)
+option(WITH_TESTS "Enable building tests." OFF)
+option(WITH_EXAMPLES "Enable building examples." OFF)
+option(WITH_CPP_TESTS "Enable building C++ wrapper tests." OFF)
 option(WITH_STATIC "Enable building static library." OFF)
 option(THREADING "Build with threading support." ON)
 
