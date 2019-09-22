@@ -10,13 +10,18 @@ namespace osceleton {
 
     SkeletonTracker::SkeletonTracker() {
         tdv::nuitrack::Nuitrack::init();
+        depth_sensor_ = tdv::nuitrack::DepthSensor::create();
         skeleton_tracker_ = tdv::nuitrack::SkeletonTracker::create();
         user_tracker_ = tdv::nuitrack::UserTracker::create();
         tdv::nuitrack::Nuitrack::run();
     }
 
+    SkeletonTracker::SkeletonTracker(const bool mirror) : SkeletonTracker{} {
+        depth_sensor_->setMirror(mirror);
+    }
+
     SkeletonTracker::~SkeletonTracker() {
-        release_nuitrack();
+        SkeletonTracker::release_nuitrack();
     }
 
     void SkeletonTracker::update() {
@@ -32,7 +37,7 @@ namespace osceleton {
         tdv::nuitrack::Nuitrack::release();
     }
 
-    void SkeletonTracker::registerOnNewUserCallback(const tdv::nuitrack::UserTracker::OnNewUser& callback) {
+    void SkeletonTracker::registerOnNewUserCallback(const tdv::nuitrack::UserTracker::OnNewUser &callback) {
         user_tracker_->connectOnNewUser(callback);
     }
 
