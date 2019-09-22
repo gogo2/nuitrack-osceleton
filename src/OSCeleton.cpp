@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
             osc_sender.sendSkeletons(skeleton_tracker.getSkeletons());
         }
 
-        skeleton_tracker.release_nuitrack();
+        osceleton::SkeletonTracker::release_nuitrack();
     }
     catch (const tdv::nuitrack::Exception &e) {
         std::cerr << "Nuitrack release failed (ExceptionType: " << e.type() << ")" << std::endl;
