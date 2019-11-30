@@ -33,7 +33,7 @@ as any CMake project
 
 
 ## TODO
-* implement more features of original OSCeleton
+* prepare proper cmake scripts
 * better docs
 
 
